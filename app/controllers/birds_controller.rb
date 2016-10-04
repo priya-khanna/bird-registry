@@ -1,6 +1,6 @@
 class BirdsController < ApplicationController
   def index
-    render json: all_birds.map{ |item| BirdDecorator.new(item).as_json }, status: 200
+    render json: Bird.where(visible: true).pluck(:id).map(&:to_s).uniq, status: 200
   end
 
   def show
@@ -12,8 +12,8 @@ class BirdsController < ApplicationController
   end
 
   def create
-    new_bird = Bird.create(bird_create_data)
-    if new_bird
+    new_bird = Bird.new(bird_data)
+    if new_bird.save
       render json: BirdDecorator.new(new_bird).as_json, status: 201
     else
       render json: { error: "Failed due to errors: #{new_bird.errors.full_messages.to_sentence}" }, status: 400
@@ -34,23 +34,16 @@ class BirdsController < ApplicationController
     @_bird = Bird.find_by(id: params[:id])
   end
 
-  def all_birds
-    @_all_birds ||= Bird.where(visible: true).desc(:added).to_a
-  end
-
-  def show_params
-    params.permit(:id)
-  end
-
   def create_params
     params.permit(:name, :family, :visible, continents: [])
   end
 
-  def bird_create_data
+  def bird_data
     {
       name: create_params[:name],
       family: create_params[:family],
       added: Time.zone.now.strftime("%Y-%m-%d"),
+      continents: create_params[:continents],
       visible: params[:visible] == "true" ? true : false
     }
   end

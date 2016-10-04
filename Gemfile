@@ -10,11 +10,14 @@ gem 'bootstrap-sass'
 gem 'turbolinks'
 gem 'awesome_print'
 gem 'mongoid', '~> 4.0.0'
+gem 'factory_girl_rails'
 
 
 group :development, :test do
   gem 'pry-rails'
   gem 'mongoid-rspec'
+  gem 'rspec-rails'
+  gem 'database_cleaner'
 end
 
 
