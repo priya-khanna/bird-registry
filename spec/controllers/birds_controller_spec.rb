@@ -40,11 +40,11 @@ RSpec.describe BirdsController, type: :controller do
     end
   end
 
-  describe "GET #delete" do
+  describe "DELETE #delete" do
     context "when bird not found" do
       let!(:bird) { FactoryGirl.create(:bird, visible: true) }
       it "errors out" do
-        get :delete, { id: 1234 }
+        delete :delete, { id: 1234 }
         expect(response).to have_http_status('404')
         expect(JSON.parse(response.body)).to eq({"error"=>"Not found"})
       end
@@ -53,7 +53,7 @@ RSpec.describe BirdsController, type: :controller do
     context "when bird is found" do
       let(:bird) { FactoryGirl.create(:bird) }
       it "deletes it" do
-        get :delete, { id: bird.id }
+        delete :delete, { id: bird.id }
         expect(response).to have_http_status('200')
         expect(JSON.parse(response.body)).to eq({"success"=>"Successfully deleted!"})
       end
