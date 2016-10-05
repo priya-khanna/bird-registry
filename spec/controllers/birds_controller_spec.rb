@@ -30,8 +30,8 @@ RSpec.describe BirdsController, type: :controller do
     end
 
     context "when birds exist" do
-      let(:bird1) { FactoryGirl.create(:bird, visible: true) }
-      let(:bird2) { FactoryGirl.create(:bird, visible: false) }
+      let!(:bird1) { FactoryGirl.create(:bird, name: 'test1', visible: true) }
+      let!(:bird2) { FactoryGirl.create(:bird, name: 'test2', visible: false) }
       it "results in only visible ones" do
         get :index
         expect(response).to have_http_status('200')
@@ -42,7 +42,7 @@ RSpec.describe BirdsController, type: :controller do
 
   describe "GET #delete" do
     context "when bird not found" do
-      let(:bird) { FactoryGirl.create(:bird, visible: true) }
+      let!(:bird) { FactoryGirl.create(:bird, visible: true) }
       it "errors out" do
         get :delete, { id: 1234 }
         expect(response).to have_http_status('404')
